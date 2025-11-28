@@ -1,0 +1,18 @@
+{
+  "name": "SLR Water Mobile",
+  "short_name": "SLR Water",
+  "description": "San Lorenzo Ruiz Municipal - Water Billing and Payment Record Management System",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f7f8",
+  "theme_color": "#1967d2",
+  "icons": [
+    {
+      "src": "../qr-code.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

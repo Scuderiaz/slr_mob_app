@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meter Reader • Consumer Records</title>
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .row-select { cursor: pointer; }
+    .row-select.active { background: rgba(26,115,232,0.06); }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; align-items: flex-end; z-index: 2000; }
+    .sheet { width: 100%; max-width: 720px; margin: 0 auto; background: #fff; border-top-left-radius: 16px; border-top-right-radius: 16px; box-shadow: 0 -8px 24px rgba(0,0,0,.2); padding: 16px; }
+    .sheet .sheet-title { font-weight: 800; font-size: 16px; }
+    .sheet .meta { color: var(--muted); font-size: 12px; }
+    .sheet .grid-2 { grid-template-columns: 1fr 1fr; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .clickable-name { color: var(--primary-color); cursor: pointer; font-weight: 600; }
+    .clickable-name:hover { text-decoration: underline; }
+  </style>
+  </head>
+<body>
+  <header class="app-bar">
+    <div class="left"><a href="meter-dashboard.html">Back</a></div>
+    <div class="title">Consumer Records</div>
+    <div class="right"></div>
+  </header>
+
+  <main class="page">
+    <!-- Summary Stats -->
+    <div class="stat-grid" style="margin-bottom:12px">
+      <div class="stat">
+        <div class="kpi" id="totalConsumers" style="color:#1a73e8;">45</div>
+        <div class="label">Total</div>
+      </div>
+      <div class="stat">
+        <div class="kpi" id="readConsumers" style="color:#4caf50;">36</div>
+        <div class="label">Read</div>
+      </div>
+      <div class="stat">
+        <div class="kpi" id="pendingConsumers" style="color:#ff9800;">9</div>
+        <div class="label">Pending</div>
+      </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="card">
+      <div class="grid-2" style="gap:10px;">
+        <div class="field">
+          <div class="label" style="font-weight:600;"><i class="fa-solid fa-search"></i> Search</div>
+          <input id="searchInput" class="input" placeholder="Name or account no...">
+        </div>
+        <div class="field">
+          <div class="label" style="font-weight:600;"><i class="fa-solid fa-filter"></i> Sort By</div>
+          <select id="sortSelect" class="select">
+            <option value="alpha">Alphabetical</option>
+            <option value="zone">By Zone</option>
+            <option value="acct">Account No.</option>
+            <option value="status">Reading Status</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="label" style="font-weight:600; margin-bottom:8px;"><i class="fa-solid fa-map-marker-alt"></i> Filter by Zone</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn zone-filter active" data-zone="all" style="padding:6px 12px; font-size:13px;">All Zones</button>
+          <button class="btn zone-filter" data-zone="Zone 1" style="padding:6px 12px; font-size:13px;">Zone 1</button>
+          <button class="btn zone-filter" data-zone="Zone 2" style="padding:6px 12px; font-size:13px;">Zone 2</button>
+          <button class="btn zone-filter" data-zone="Zone 3" style="padding:6px 12px; font-size:13px;">Zone 3</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Consumers List -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="margin:0;"><i class="fa-solid fa-users"></i> Consumers</h3>
+        <span class="muted" id="resultCount">Showing 2 of 2</span>
+      </div>
+      <table class="table" id="consumersTable">
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>Name / Zone</th>
+            <th>Status</th>
+            <th style="width:1%"></th>
+          </tr>
+        </thead>
+        <tbody id="consumersBody">
+          <tr class="row-select" data-acct="07-11-46-2" data-name="Juan Dela Cruz" data-zone="Zone 1" data-status="Read" data-prev="1234" data-address="Purok 1, Barangay Poblacion">
+            <td style="font-weight:600;">07-11-46-2</td>
+            <td>
+              <span class="clickable-name" data-action="view">Juan Dela Cruz</span>
+              <div class="meta"><i class="fa-solid fa-map-marker-alt"></i> Zone 1</div>
+            </td>
+            <td><span class="chip paid" style="background:#d4edda; color:#155724;">✓ Read</span></td>
+            <td><button class="btn" data-action="view"><i class="fa-regular fa-eye"></i></button></td>
+          </tr>
+          <tr class="row-select" data-acct="07-11-46-3" data-name="Maria Santos" data-zone="Zone 1" data-status="Pending" data-prev="1300" data-address="Purok 2, Barangay Poblacion">
+            <td style="font-weight:600;">07-11-46-3</td>
+            <td>
+              <span class="clickable-name" data-action="view">Maria Santos</span>
+              <div class="meta"><i class="fa-solid fa-map-marker-alt"></i> Zone 1</div>
+            </td>
+            <td><span class="chip" style="background:#fff3cd; color:#856404;">⏱ Pending</span></td>
+            <td></td>
+          </tr>
+          <tr class="row-select" data-acct="07-11-46-4" data-name="Pedro Reyes" data-zone="Zone 1" data-status="Pending" data-prev="1150" data-address="Purok 3, Barangay Poblacion">
+            <td style="font-weight:600;">07-11-46-4</td>
+            <td>
+              <span class="clickable-name" data-action="view">Pedro Reyes</span>
+              <div class="meta"><i class="fa-solid fa-map-marker-alt"></i> Zone 1</div>
+            </td>
+            <td><span class="chip" style="background:#fff3cd; color:#856404;">⏱ Pending</span></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="meter-dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a>
+    <a href="meter-entry.html"><i class="fa-solid fa-pen-to-square"></i>Entry</a>
+    <a class="active" href="meter-consumers.html"><i class="fa-solid fa-users"></i>Consumers</a>
+    <a href="meter-profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+  </nav>
+
+  <script>
+    const tbody = document.getElementById('consumersBody');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const resultCount = document.getElementById('resultCount');
+    const zoneFilters = document.querySelectorAll('.zone-filter');
+
+    let selectedRow = null;
+    let currentZoneFilter = 'all';
+
+    function updateStats() {
+      const rows = [...tbody.rows];
+      const total = rows.length;
+      const read = rows.filter(r => r.dataset.status === 'Read').length;
+      const pending = total - read;
+      
+      document.getElementById('totalConsumers').textContent = total;
+      document.getElementById('readConsumers').textContent = read;
+      document.getElementById('pendingConsumers').textContent = pending;
+    }
+
+    function applyFilter() {
+      const q = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+      const totalCount = tbody.rows.length;
+      
+      [...tbody.rows].forEach(tr => {
+        const acct = tr.dataset.acct.toLowerCase();
+        const name = tr.dataset.name.toLowerCase();
+        const zone = tr.dataset.zone;
+        
+        const matchesSearch = acct.includes(q) || name.includes(q);
+        const matchesZone = currentZoneFilter === 'all' || zone === currentZoneFilter;
+        
+        if (matchesSearch && matchesZone) {
+          tr.style.display = '';
+          visibleCount++;
+        } else {
+          tr.style.display = 'none';
+        }
+      });
+      
+      resultCount.textContent = `Showing ${visibleCount} of ${totalCount}`;
+    }
+
+    function applySort() {
+      const rows = [...tbody.rows];
+      const mode = sortSelect.value;
+      rows.sort((a,b) => {
+        if (mode === 'alpha') return a.dataset.name.localeCompare(b.dataset.name);
+        if (mode === 'zone') return a.dataset.zone.localeCompare(b.dataset.zone) || a.dataset.name.localeCompare(b.dataset.name);
+        if (mode === 'acct') return a.dataset.acct.localeCompare(b.dataset.acct);
+        if (mode === 'status') return a.dataset.status.localeCompare(b.dataset.status) || a.dataset.name.localeCompare(b.dataset.name);
+        return 0;
+      });
+      rows.forEach(r => tbody.appendChild(r));
+      applyFilter();
+    }
+
+    // Zone filter buttons
+    zoneFilters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        zoneFilters.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentZoneFilter = btn.dataset.zone;
+        applyFilter();
+      });
+    });
+
+    function openRecord(tr) {
+      if (!tr) return;
+      
+      const status = tr.dataset.status;
+      const acct = tr.dataset.acct;
+      const name = tr.dataset.name;
+      const zone = tr.dataset.zone;
+      const prev = tr.dataset.prev;
+      const address = tr.dataset.address;
+      
+      // If already read, show receipt preview
+      if (status === 'Read') {
+        showReceiptPreview(tr);
+      } else {
+        // If pending, redirect to entry page with pre-filled data
+        redirectToEntry(acct, name, zone, prev, address);
+      }
+    }
+    
+    function showReceiptPreview(tr) {
+      // Get consumer data
+      const acct = tr.dataset.acct;
+      const name = tr.dataset.name;
+      const zone = tr.dataset.zone;
+      const prev = tr.dataset.prev;
+      const address = tr.dataset.address;
+      
+      // Simulate reading data (in real app, this would come from database)
+      const current = parseInt(prev) + 8; // Example: 8 m³ consumption
+      const consumption = current - parseInt(prev);
+      
+      // Generate receipt preview
+      showReceiptModal(acct, name, address, prev, current, consumption);
+    }
+    
+    function showReceiptModal(acct, name, address, prev, current, consumption) {
+      // Calculate charges
+      const ratePerCubic = 25;
+      const currentMonthCharge = consumption * ratePerCubic;
+      const currentMonthPenalty = currentMonthCharge * 0.10;
+      const unpaidBalance = 300.00;
+      const unpaidPenalty = unpaidBalance * 0.10;
+      const connectionFee = 0.00;
+      const totalDue = currentMonthCharge + currentMonthPenalty + unpaidBalance + unpaidPenalty + connectionFee;
+      const totalAfterDueDate = totalDue + (currentMonthCharge * 0.10);
+      
+      // Get dates
+      const now = new Date();
+      const readingDate = now.toLocaleDateString('en-PH', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      const dueDate = new Date(now.getTime() + (15 * 24 * 60 * 60 * 1000)).toLocaleDateString('en-PH', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      
+      // Generate receipt HTML
+      const receiptHTML = `
+        <div style="font-family:system-ui; max-width:400px; margin:0 auto; padding:20px; background:#fff;">
+          <div style="text-align:center; margin-bottom:10px;">
+            <div style="font-weight:700; font-size:13px; margin-bottom:8px; letter-spacing:0.5px;">BAYARIN SA TUBIG</div>
+            <div style="font-size:9px; line-height:1.2;">
+              Republika ng Pilipinas<br>
+              Lalawigan ng Camarines Norte<br>
+              Bayan ng San Lorenzo Ruiz
+            </div>
+            <div style="font-weight:700; font-size:10px; margin-top:6px; letter-spacing:0.3px;">SAN LORENZO RUIZ WATERWORKS SYSTEM</div>
+          </div>
+          
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+            <tr>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;">Account No.</td>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;">Numero ng Metro</td>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;">Petsa ng Pagbasa</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000;">${acct}</td>
+              <td style="padding:4px; border:1px solid #000;">1234</td>
+              <td style="padding:4px; border:1px solid #000;">${readingDate}</td>
+            </tr>
+          </table>
+          
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+            <tr>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;" colspan="3">Pangalan ng Consumer</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000;" colspan="3">${name}</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;" colspan="3">Address</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000;" colspan="3">${address}</td>
+            </tr>
+          </table>
+          
+          <div style="font-size:9px; margin-bottom:8px; line-height:1.4; text-align:justify;">
+            Ang tagapagbasa ng metro ng tubig ay pumunta sa inyo ngayong araw upang basahin at kwentahin ang konsumo ng tubig ayon sa mga sumusunod:
+          </div>
+          
+          <div style="font-size:9px; margin-bottom:6px;">
+            <div style="font-weight:700; margin-bottom:2px;">Konsumo:</div>
+            <div style="padding-left:5px; line-height:1.5;">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Ngayong Buwan _________________________________</span>
+                <span><strong>${current}</strong> metro kubiko</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Nakaraang Buwan _______________________________</span>
+                <span><strong>${prev}</strong> metro kubiko</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang Konsumo ______________________________</span>
+                <span><strong>${consumption}</strong> metro kubiko</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="font-size:9px; margin-bottom:6px; margin-top:8px;">
+            <div style="font-weight:700; margin-bottom:2px;">Takdang Halaga</div>
+            <div style="padding-left:5px; line-height:1.5;">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Bayarin ngayong Buwan _____________________________</span>
+                <span><strong>${currentMonthCharge.toFixed(2)}</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Multa (10%) ________________________________________</span>
+                <span><strong>${currentMonthPenalty.toFixed(2)}</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Di pa Bayad na Bayarin ____________________________</span>
+                <span><strong>${unpaidBalance.toFixed(2)}</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Multa (10%) ________________________________________</span>
+                <span><strong>${unpaidPenalty.toFixed(2)}</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Bayarin sa Koneksyon/Metro ________________________</span>
+                <span><strong>${connectionFee.toFixed(2)}</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang Bayarin ___________________________________</span>
+                <span><strong>${totalDue.toFixed(2)}</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang bayarin pagkalipas ng takdang petsa ___</span>
+                <span><strong>${totalAfterDueDate.toFixed(2)}</strong></span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="font-size:8px; margin:10px 0; line-height:1.4; text-align:justify; font-style:italic;">
+            "Kung ang bayarin sa metro ng tubig/bayarin sa koneksyon/mga nakaraang buwan at multa ay nabayaran na, kasalukuyang buwan lang ang babayaran. <strong>2025 SEPT</strong>"
+          </div>
+          
+          <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:9px; border:1px solid #000;">
+            <tr>
+              <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Water Bill #</td>
+              <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Tagabasa ng Metro</td>
+              <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Para sa Buwang</td>
+            </tr>
+            <tr>
+              <td style="padding:12px; border:1px solid #000;"></td>
+              <td style="padding:12px; border:1px solid #000; text-align:center;">__________</td>
+              <td style="padding:12px; border:1px solid #000;"></td>
+            </tr>
+          </table>
+          
+          <div style="font-size:8px; text-align:center; margin-top:8px; font-style:italic;">
+            *** Hindi ito Patunay ng Kabayaran ***
+          </div>
+        </div>
+      `;
+      
+      // Create and show modal
+      const modal = document.createElement('div');
+      modal.id = 'receiptPreviewModal';
+      modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; overflow-y:auto;';
+      
+      modal.innerHTML = `
+        <div style="background:#fff; border-radius:12px; max-width:500px; width:100%; max-height:90vh; overflow-y:auto; position:relative;">
+          <div style="position:sticky; top:0; background:#fff; padding:16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; border-radius:12px 12px 0 0;">
+            <h3 style="margin:0; font-size:18px;">Receipt Preview</h3>
+            <button onclick="document.getElementById('receiptPreviewModal').remove()" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0; width:32px; height:32px;">&times;</button>
+          </div>
+          <div style="padding:20px;">
+            ${receiptHTML}
+          </div>
+          <div style="position:sticky; bottom:0; background:#fff; padding:16px; border-top:1px solid #e5e7eb; border-radius:0 0 12px 12px;">
+            <button onclick="window.print()" class="btn primary" style="width:100%; padding:12px; background:#1a73e8; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer;">
+              <i class="fa-solid fa-print"></i> Print Receipt
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+    
+    function redirectToEntry(acct, name, zone, prev, address) {
+      // Store consumer data for entry page
+      const consumerData = {
+        id: '1234',
+        acct: acct,
+        name: name,
+        zone: zone,
+        address: address,
+        prev: prev,
+        current: '',
+        consumption: '',
+        showReceiptOnly: false
+      };
+      
+      localStorage.setItem('quickReading', JSON.stringify(consumerData));
+      window.location.href = 'meter-entry.html';
+    }
+
+    function selectRow(tr) {
+      if (selectedRow) selectedRow.classList.remove('active');
+      selectedRow = tr;
+      if (selectedRow) selectedRow.classList.add('active');
+    }
+
+    tbody.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-action="view"]');
+      const row = e.target.closest('tr.row-select');
+      if (trigger && row) {
+        selectRow(row);
+        openRecord(row);
+        return;
+      }
+      if (row) {
+        selectRow(row);
+      }
+    });
+
+    searchInput.addEventListener('input', applyFilter);
+    sortSelect.addEventListener('change', applySort);
+
+    // Initialize
+    updateStats();
+    applySort();
+  </script>
+</body>
+</html>

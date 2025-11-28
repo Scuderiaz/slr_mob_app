@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meter Reader • Meter Reading Entry</title>
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="app-bar">
+    <div class="left"><a href="meter-dashboard.html" style="color:#1a73e8; font-weight:600;">Home</a></div>
+    <div class="title" style="font-weight:700; font-size:20px;">Entry</div>
+    <div class="right"></div>
+  </header>
+  <main class="page">
+    <!-- Filter Section -->
+    <section class="card">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="field">
+          <div class="label" style="font-weight:600; margin-bottom:8px;">Filter by Zone</div>
+          <select class="select" id="zoneFilter" onchange="filterConsumers()">
+            <option value="">All</option>
+            <option value="1">Zone 1</option>
+            <option value="2">Zone 2</option>
+            <option value="3">Zone 3</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="label" style="font-weight:600; margin-bottom:8px;">Search by Name</div>
+          <input class="input" placeholder="Type name..." id="searchInput" onkeyup="filterConsumers()">
+        </div>
+      </div>
+    </section>
+
+    <!-- Consumers List -->
+    <div id="consumerList">
+      <!-- Consumer 1 -->
+      <section class="card consumer-card" data-name="Juan Dela Cruz" data-account="07-11-46-2" data-zone="1">
+        <h3 style="margin-bottom:16px; font-size:18px; font-weight:700;">Consumers</h3>
+        
+        <div style="border-bottom:1px solid #e5e7eb; padding-bottom:12px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <div style="font-weight:600;">Acct No.</div>
+            <div style="text-align:right;">07-11-46-2</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <div style="font-weight:600;">Name</div>
+            <div style="text-align:right;">Juan Dela Cruz</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <div style="font-weight:600;">Previous</div>
+            <div style="text-align:right;">1234</div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <div class="label" style="font-weight:600; margin-bottom:8px;">Present</div>
+          <input type="number" class="input" id="current-1" placeholder="Enter current reading" oninput="calculateConsumption(1, 1234)" style="font-size:18px; font-weight:700; text-align:center; border:2px solid #e5e7eb; transition:all 0.3s;" onfocus="this.style.borderColor='#1a73e8'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+
+        <div id="consumption-card-1" style="border-bottom:1px solid #e5e7eb; padding:12px; margin-bottom:12px; background:#f8f9fa; border-radius:8px; transition:all 0.3s;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:600;">Consumption</div>
+            <div id="consumption-1" style="text-align:right; font-size:24px; font-weight:700; color:#1a73e8;">--</div>
+          </div>
+          <div id="consumption-status-1" style="font-size:11px; text-align:right; margin-top:4px; opacity:0.7;"></div>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <div class="label" style="font-weight:600; margin-bottom:8px;">Exception</div>
+          <select class="select" id="exception-1">
+            <option value="">None</option>
+            <option>Locked meter</option>
+            <option>Unreadable dial</option>
+            <option>Suspected leak</option>
+            <option>Meter damaged</option>
+            <option>Consumer absent</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <div class="label" style="font-weight:600; margin-bottom:8px;">Notes</div>
+          <textarea class="input" id="notes-1" placeholder="note" rows="3" style="resize:vertical;"></textarea>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <div class="label" style="font-weight:600; margin-bottom:8px;">Attach Photo (Optional)</div>
+          <button class="btn" style="width:100%; justify-content:center; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-plus"></i> Attach image
+          </button>
+        </div>
+
+        <div style="border-bottom:1px solid #e5e7eb; padding-bottom:12px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between;">
+            <div style="font-weight:600;">Reader Name</div>
+            <div style="text-align:right;">Meter Reader</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px;">
+          <button id="save-btn-1" onclick="saveReading(1, '07-11-46-2', 'Juan Dela Cruz', 1234)" class="btn" style="padding:14px; display:flex; align-items:center; justify-content:center; gap:8px; background:#4caf50; color:#fff; border:none; transition:all 0.3s;" disabled>
+            <i class="fa-solid fa-check"></i> Save
+          </button>
+          <button id="print-btn-1" onclick="printReadingReceipt(1, '07-11-46-2', 'Juan Dela Cruz', 1234)" class="btn" style="padding:14px; display:flex; align-items:center; justify-content:center; gap:8px; background:#000; color:#fff; border:none; transition:all 0.3s;" disabled>
+            <i class="fa-solid fa-print"></i> Print
+          </button>
+        </div>
+      </section>
+
+    </div>
+    <!-- Receipt Preview Modal -->
+    <div id="receiptModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; overflow-y:auto;">
+      <div style="min-height:100%; display:flex; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:#fff; border-radius:12px; max-width:400px; width:100%; box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+          <!-- Modal Header -->
+          <div style="padding:16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; font-size:18px;">Preview Receipt</h3>
+            <button onclick="closeReceiptPreview()" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0; width:32px; height:32px;">&times;</button>
+          </div>
+          
+          <!-- Receipt Preview -->
+          <div id="receiptPreview" style="padding:20px; background:#f8f9fa; max-height:60vh; overflow-y:auto;">
+            <!-- Receipt content will be inserted here -->
+          </div>
+          
+          <!-- Modal Footer -->
+          <div style="padding:16px; border-top:1px solid #e5e7eb;">
+            <div style="margin-bottom:12px;">
+              <label style="display:block; font-weight:600; margin-bottom:8px; font-size:14px;">
+                <i class="fa-solid fa-print"></i> Printer Type
+              </label>
+              <select id="printerType" class="select" style="width:100%; padding:10px;">
+                <option value="browser">Regular Printer (Browser)</option>
+                <option value="bluetooth">Bluetooth Thermal Printer</option>
+              </select>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <button onclick="closeReceiptPreview()" class="btn" style="padding:12px;">Cancel</button>
+              <button onclick="confirmPrint()" class="btn primary" style="padding:12px; background:#000; color:#fff; border:none;">
+                <i class="fa-solid fa-print"></i> Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Hidden printable Reading Receipt -->
+    <div id="reading-receipt" style="display:none">
+      <div style="font-family:system-ui; width:280px; padding:12px">
+        <div id="rr-body" style="font-size:14px; line-height:1.3"></div>
+      </div>
+    </div>
+  </main>
+  <nav class="bottom-nav">
+    <a href="meter-dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a>
+    <a class="active" href="meter-entry.html"><i class="fa-solid fa-pen-to-square"></i>Entry</a>
+    <a href="meter-consumers.html"><i class="fa-solid fa-users"></i>Consumers</a>
+    <a href="meter-profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+  </nav>
+  <script>
+    // Basic offline/sync indicator (demo)
+    window.addEventListener('online', () => {
+      document.getElementById('offlineBadge').style.display = 'none';
+      document.getElementById('syncStatus').textContent = 'Sync: Online';
+    });
+    window.addEventListener('offline', () => {
+      document.getElementById('offlineBadge').style.display = 'inline-block';
+      document.getElementById('syncStatus').textContent = 'Sync: Pending (offline)';
+    });
+
+    function calculateConsumption(id, prevReading) {
+      const currentInput = document.getElementById(`current-${id}`);
+      const consumptionDiv = document.getElementById(`consumption-${id}`);
+      const consumptionCard = document.getElementById(`consumption-card-${id}`);
+      const consumptionStatus = document.getElementById(`consumption-status-${id}`);
+      const saveBtn = document.getElementById(`save-btn-${id}`);
+      const printBtn = document.getElementById(`print-btn-${id}`);
+      
+      if (currentInput.value) {
+        const current = parseInt(currentInput.value);
+        const consumption = current - prevReading;
+        
+        if (consumption < 0) {
+          // Invalid reading
+          consumptionDiv.innerHTML = '<span style="color:#f44336;">Invalid!</span>';
+          consumptionStatus.innerHTML = '<span style="color:#f44336;">⚠️ Current reading cannot be less than previous</span>';
+          consumptionCard.style.background = '#fee';
+          consumptionCard.style.borderLeft = '4px solid #f44336';
+          saveBtn.disabled = true;
+          printBtn.disabled = true;
+          saveBtn.style.opacity = '0.5';
+          printBtn.style.opacity = '0.5';
+        } else if (consumption > 100) {
+          // High consumption warning
+          consumptionDiv.innerHTML = `<span style="color:#ff9800;">${consumption}</span>`;
+          consumptionStatus.innerHTML = '<span style="color:#ff9800;">⚠️ Unusually high consumption - please verify</span>';
+          consumptionCard.style.background = '#fff8e1';
+          consumptionCard.style.borderLeft = '4px solid #ff9800';
+          saveBtn.disabled = false;
+          printBtn.disabled = false;
+          saveBtn.style.opacity = '1';
+          printBtn.style.opacity = '1';
+        } else if (consumption === 0) {
+          // Zero consumption
+          consumptionDiv.innerHTML = `<span style="color:#9e9e9e;">${consumption}</span>`;
+          consumptionStatus.innerHTML = '<span style="color:#9e9e9e;">ℹ️ No consumption recorded</span>';
+          consumptionCard.style.background = '#f5f5f5';
+          consumptionCard.style.borderLeft = '4px solid #9e9e9e';
+          saveBtn.disabled = false;
+          printBtn.disabled = false;
+          saveBtn.style.opacity = '1';
+          printBtn.style.opacity = '1';
+        } else {
+          // Normal consumption
+          consumptionDiv.innerHTML = `<span style="color:#4caf50;">${consumption}</span>`;
+          consumptionStatus.innerHTML = '<span style="color:#4caf50;">✓ Valid reading</span>';
+          consumptionCard.style.background = '#e8f5e9';
+          consumptionCard.style.borderLeft = '4px solid #4caf50';
+          saveBtn.disabled = false;
+          printBtn.disabled = false;
+          saveBtn.style.opacity = '1';
+          printBtn.style.opacity = '1';
+        }
+        
+        // Animate the consumption card
+        consumptionCard.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+          consumptionCard.style.transform = 'scale(1)';
+        }, 200);
+      } else {
+        // No input
+        consumptionDiv.textContent = '--';
+        consumptionStatus.textContent = '';
+        consumptionCard.style.background = '#f8f9fa';
+        consumptionCard.style.borderLeft = 'none';
+        saveBtn.disabled = true;
+        printBtn.disabled = true;
+        saveBtn.style.opacity = '0.5';
+        printBtn.style.opacity = '0.5';
+      }
+    }
+    
+    function saveReading(id, acct, name, prev) {
+      const currentInput = document.getElementById(`current-${id}`);
+      const current = currentInput.value;
+      const exception = document.getElementById(`exception-${id}`).value;
+      const notes = document.getElementById(`notes-${id}`).value;
+      
+      if (!current) {
+        alert('Please enter current reading first!');
+        return;
+      }
+      
+      const consumption = parseInt(current) - prev;
+      
+      if (consumption < 0) {
+        alert('Cannot save invalid reading!');
+        return;
+      }
+      
+      // Save to localStorage (offline support)
+      const reading = {
+        id: id,
+        acct: acct,
+        name: name,
+        prev: prev,
+        current: current,
+        consumption: consumption,
+        exception: exception,
+        notes: notes,
+        timestamp: new Date().toISOString()
+      };
+      
+      localStorage.setItem(`reading-${id}`, JSON.stringify(reading));
+      
+      // Visual feedback
+      const saveBtn = document.getElementById(`save-btn-${id}`);
+      const originalText = saveBtn.innerHTML;
+      saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Saved!';
+      saveBtn.style.background = '#2e7d32';
+      
+      setTimeout(() => {
+        saveBtn.innerHTML = originalText;
+        saveBtn.style.background = '#4caf50';
+      }, 2000);
+      
+      console.log('Reading saved:', reading);
+    }
+
+    function printReadingReceipt(id, acct, name, prev) {
+      const currentInput = document.getElementById(`current-${id}`);
+      const current = currentInput.value;
+      const exception = document.getElementById(`exception-${id}`).value;
+      const notes = document.getElementById(`notes-${id}`).value;
+      
+      // Validation
+      if (!current) {
+        alert('Please enter current reading first!');
+        return;
+      }
+      
+      const consumption = parseInt(current) - prev;
+      
+      if (consumption < 0) {
+        alert('Invalid reading! Current reading cannot be less than previous reading.');
+        return;
+      }
+      
+      const now = new Date();
+      const when = now.toLocaleString('en-PH', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      // Get current date details
+      const readingDate = now.toLocaleDateString('en-PH', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      const dueDate = new Date(now.getTime() + (15 * 24 * 60 * 60 * 1000)).toLocaleDateString('en-PH', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      
+      // Calculate charges (basic rate: ₱25 per cubic meter for example)
+      const ratePerCubic = 25;
+      const currentMonthCharge = consumption * ratePerCubic;
+      const currentMonthPenalty = currentMonthCharge * 0.10;
+      const unpaidBalance = 300.00; // This would come from database
+      const unpaidPenalty = unpaidBalance * 0.10;
+      const connectionFee = 0.00;
+      const totalDue = currentMonthCharge + currentMonthPenalty + unpaidBalance + unpaidPenalty + connectionFee;
+      const totalAfterDueDate = totalDue + (currentMonthCharge * 0.10);
+      
+      // Generate receipt content matching original format EXACTLY
+      const receiptContent = `
+        <div style="text-align:center; margin-bottom:10px;">
+          <div style="font-weight:700; font-size:13px; margin-bottom:8px; letter-spacing:0.5px;">BAYARIN SA TUBIG</div>
+          <div style="font-size:9px; line-height:1.2;">
+            Republika ng Pilipinas<br>
+            Lalawigan ng Camarines Norte<br>
+            Bayan ng San Lorenzo Ruiz
+          </div>
+          <div style="font-weight:700; font-size:10px; margin-top:6px; letter-spacing:0.3px;">SAN LORENZO RUIZ WATERWORKS SYSTEM</div>
+        </div>
+        
+        <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+          <tr>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Account No.</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Numero ng Metro</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Petsa ng Pagbasa</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000;">${acct}</td>
+            <td style="padding:4px; border:1px solid #000;">039379-19</td>
+            <td style="padding:4px; border:1px solid #000;">${readingDate}</td>
+          </tr>
+        </table>
+        
+        <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+          <tr>
+            <td colspan="2" style="padding:4px; border:1px solid #000; font-weight:600;">Pangalan ng Konsumidor:</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding:4px; border:1px solid #000;">${name.toUpperCase()}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Lugar</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Purok</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000;">MATACONG</td>
+            <td style="padding:4px; border:1px solid #000;"></td>
+          </tr>
+        </table>
+        
+        <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+          <tr>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Nasakop na Petsa:</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Takdang Petsa</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Petsa ng Diskoneksyon</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000;">${readingDate}</td>
+            <td style="padding:4px; border:1px solid #000;">${dueDate}</td>
+            <td style="padding:4px; border:1px solid #000;"></td>
+          </tr>
+        </table>
+        
+        <div style="font-size:9px; margin-bottom:8px; line-height:1.4; text-align:justify;">
+          Ang tagapagbasa ng metro ng tubig ay pumunta sa inyo ngayong araw upang basahin at kwentahin ang konsumo ng tubig ayon sa mga sumusunod:
+        </div>
+        
+        <div style="font-size:9px; margin-bottom:6px;">
+          <div style="font-weight:700; margin-bottom:2px;">Konsumo:</div>
+          <div style="padding-left:5px; line-height:1.5;">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Ngayong Buwan _________________________________</span>
+              <span><strong>${current}</strong> metro kubiko</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Nakaraang Buwan _______________________________</span>
+              <span><strong>${prev}</strong> metro kubiko</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Kabuuang Konsumo ______________________________</span>
+              <span><strong>${consumption}</strong> metro kubiko</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="font-size:9px; margin-bottom:6px; margin-top:8px;">
+          <div style="font-weight:700; margin-bottom:2px;">Takdang Halaga</div>
+          <div style="padding-left:5px; line-height:1.5;">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Bayarin ngayong Buwan _____________________________</span>
+              <span><strong>${currentMonthCharge.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Multa (10%) ________________________________________</span>
+              <span><strong>${currentMonthPenalty.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Di pa Bayad na Bayarin ____________________________</span>
+              <span><strong>${unpaidBalance.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Multa (10%) ________________________________________</span>
+              <span><strong>${unpaidPenalty.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Bayarin sa Koneksyon/Metro ________________________</span>
+              <span><strong>${connectionFee.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Kabuuang Bayarin ___________________________________</span>
+              <span><strong>${totalDue.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Kabuuang bayarin pagkalipas ng takdang petsa ___</span>
+              <span><strong>${totalAfterDueDate.toFixed(2)}</strong></span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="font-size:8px; margin:10px 0; line-height:1.4; text-align:justify; font-style:italic;">
+          "Kung ang bayarin sa metro ng tubig/bayarin sa koneksyon/mga nakaraang buwan at multa ay nabayaran na, kasalukuyang buwan lang ang babayaran. <strong>2025 SEPT</strong>"
+        </div>
+        
+        ${notes ? `<div style="font-size:9px; margin-bottom:8px; border-top:1px solid #000; padding-top:6px;"><strong>Notes:</strong> ${notes}</div>` : ''}
+        ${exception ? `<div style="font-size:9px; margin-bottom:8px; color:#f44336;"><strong>Exception:</strong> ${exception}</div>` : ''}
+        
+        <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:9px; border:1px solid #000;">
+          <tr>
+            <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Water Bill #</td>
+            <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Tagabasa ng Metro</td>
+            <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Para sa Buwang</td>
+          </tr>
+          <tr>
+            <td style="padding:12px; border:1px solid #000;"></td>
+            <td style="padding:12px; border:1px solid #000; text-align:center;">__________</td>
+            <td style="padding:12px; border:1px solid #000;"></td>
+          </tr>
+        </table>
+        
+        <div style="font-size:8px; text-align:center; margin-top:8px; font-style:italic;">
+          *** Hindi ito Patunay ng Kabayaran ***
+        </div>
+      `;
+      
+      // Store receipt data for printing
+      window.currentReceiptData = {
+        id: id,
+        acct: acct,
+        name: name,
+        prev: prev,
+        current: current,
+        consumption: consumption,
+        exception: exception,
+        notes: notes,
+        when: when
+      };
+      
+      // Show preview modal
+      document.getElementById('receiptPreview').innerHTML = receiptContent;
+      document.getElementById('receiptModal').style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+    
+    function closeReceiptPreview() {
+      document.getElementById('receiptModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    function confirmPrint() {
+      const data = window.currentReceiptData;
+      
+      // Get dates
+      const now = new Date();
+      const readingDate = now.toLocaleDateString('en-PH', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      const dueDate = new Date(now.getTime() + (15 * 24 * 60 * 60 * 1000)).toLocaleDateString('en-PH', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      
+      // Calculate charges
+      const ratePerCubic = 25;
+      const currentMonthCharge = data.consumption * ratePerCubic;
+      const currentMonthPenalty = currentMonthCharge * 0.10;
+      const unpaidBalance = 300.00;
+      const unpaidPenalty = unpaidBalance * 0.10;
+      const connectionFee = 0.00;
+      const totalDue = currentMonthCharge + currentMonthPenalty + unpaidBalance + unpaidPenalty + connectionFee;
+      const totalAfterDueDate = totalDue + (currentMonthCharge * 0.10);
+      
+      // Generate final receipt for printing
+      const body = document.getElementById('rr-body');
+      body.innerHTML = `
+        <div style="text-align:center; margin-bottom:10px;">
+          <div style="font-weight:700; font-size:13px; margin-bottom:8px; letter-spacing:0.5px;">BAYARIN SA TUBIG</div>
+          <div style="font-size:9px; line-height:1.2;">
+            Republika ng Pilipinas<br>
+            Lalawigan ng Camarines Norte<br>
+            Bayan ng San Lorenzo Ruiz
+          </div>
+          <div style="font-weight:700; font-size:10px; margin-top:6px; letter-spacing:0.3px;">SAN LORENZO RUIZ WATERWORKS SYSTEM</div>
+        </div>
+        
+        <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+          <tr>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Account No.</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Numero ng Metro</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Petsa ng Pagbasa</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000;">${data.acct}</td>
+            <td style="padding:4px; border:1px solid #000;">039379-19</td>
+            <td style="padding:4px; border:1px solid #000;">${readingDate}</td>
+          </tr>
+        </table>
+        
+        <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+          <tr>
+            <td colspan="2" style="padding:4px; border:1px solid #000; font-weight:600;">Pangalan ng Konsumidor:</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding:4px; border:1px solid #000;">${data.name.toUpperCase()}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Lugar</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Purok</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000;">MATACONG</td>
+            <td style="padding:4px; border:1px solid #000;"></td>
+          </tr>
+        </table>
+        
+        <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+          <tr>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Nasakop na Petsa:</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Takdang Petsa</td>
+            <td style="padding:4px; border:1px solid #000; font-weight:600;">Petsa ng Diskoneksyon</td>
+          </tr>
+          <tr>
+            <td style="padding:4px; border:1px solid #000;">${readingDate}</td>
+            <td style="padding:4px; border:1px solid #000;">${dueDate}</td>
+            <td style="padding:4px; border:1px solid #000;"></td>
+          </tr>
+        </table>
+        
+        <div style="font-size:9px; margin-bottom:8px; line-height:1.4; text-align:justify;">
+          Ang tagapagbasa ng metro ng tubig ay pumunta sa inyo ngayong araw upang basahin at kwentahin ang konsumo ng tubig ayon sa mga sumusunod:
+        </div>
+        
+        <div style="font-size:9px; margin-bottom:6px;">
+          <div style="font-weight:700; margin-bottom:2px;">Konsumo:</div>
+          <div style="padding-left:5px; line-height:1.5;">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Ngayong Buwan _________________________________</span>
+              <span><strong>${data.current}</strong> metro kubiko</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Nakaraang Buwan _______________________________</span>
+              <span><strong>${data.prev}</strong> metro kubiko</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Kabuuang Konsumo ______________________________</span>
+              <span><strong>${data.consumption}</strong> metro kubiko</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="font-size:9px; margin-bottom:6px; margin-top:8px;">
+          <div style="font-weight:700; margin-bottom:2px;">Takdang Halaga</div>
+          <div style="padding-left:5px; line-height:1.5;">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Bayarin ngayong Buwan _____________________________</span>
+              <span><strong>${currentMonthCharge.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Multa (10%) ________________________________________</span>
+              <span><strong>${currentMonthPenalty.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Di pa Bayad na Bayarin ____________________________</span>
+              <span><strong>${unpaidBalance.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Multa (10%) ________________________________________</span>
+              <span><strong>${unpaidPenalty.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Bayarin sa Koneksyon/Metro ________________________</span>
+              <span><strong>${connectionFee.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Kabuuang Bayarin ___________________________________</span>
+              <span><strong>${totalDue.toFixed(2)}</strong></span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Kabuuang bayarin pagkalipas ng takdang petsa ___</span>
+              <span><strong>${totalAfterDueDate.toFixed(2)}</strong></span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="font-size:8px; margin:10px 0; line-height:1.4; text-align:justify; font-style:italic;">
+          "Kung ang bayarin sa metro ng tubig/bayarin sa koneksyon/mga nakaraang buwan at multa ay nabayaran na, kasalukuyang buwan lang ang babayaran. <strong>2025 SEPT</strong>"
+        </div>
+        
+        ${data.notes ? `<div style="font-size:9px; margin-bottom:8px; border-top:1px solid #000; padding-top:6px;"><strong>Notes:</strong> ${data.notes}</div>` : ''}
+        ${data.exception ? `<div style="font-size:9px; margin-bottom:8px; color:#f44336;"><strong>Exception:</strong> ${data.exception}</div>` : ''}
+        
+        <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:9px; border:1px solid #000;">
+          <tr>
+            <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Water Bill #</td>
+            <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Tagabasa ng Metro</td>
+            <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Para sa Buwang</td>
+          </tr>
+          <tr>
+            <td style="padding:12px; border:1px solid #000;"></td>
+            <td style="padding:12px; border:1px solid #000; text-align:center;">__________</td>
+            <td style="padding:12px; border:1px solid #000;"></td>
+          </tr>
+        </table>
+        
+        <div style="font-size:8px; text-align:center; margin-top:8px; font-style:italic;">
+          *** Hindi ito Patunay ng Kabayaran ***
+        </div>
+      `;
+      
+      // Close modal
+      closeReceiptPreview();
+      
+      // Check printer type
+      const printerType = document.getElementById('printerType').value;
+      
+      if (printerType === 'bluetooth') {
+        printToBluetoothThermal(data, readingDate, dueDate, currentMonthCharge, currentMonthPenalty, unpaidBalance, unpaidPenalty, connectionFee, totalDue, totalAfterDueDate);
+      } else {
+        // Regular browser print
+        const receipt = document.getElementById('reading-receipt').innerHTML;
+        const w = window.open('', 'PRINT', 'height=600,width=400');
+        w.document.write('<html><head><title>Reading Receipt</title>');
+        w.document.write('<style>body{font-family:Arial,sans-serif;padding:20px;}</style>');
+        w.document.write('</head><body>');
+        w.document.write(receipt);
+        w.document.write('</body></html>');
+        w.document.close();
+        w.focus();
+        w.print();
+        w.close();
+      }
+    }
+
+    // Bluetooth Thermal Printer Support
+    let bluetoothDevice = null;
+    let bluetoothCharacteristic = null;
+
+    async function printToBluetoothThermal(data, readingDate, dueDate, currentMonthCharge, currentMonthPenalty, unpaidBalance, unpaidPenalty, connectionFee, totalDue, totalAfterDueDate) {
+      try {
+        // Check if Web Bluetooth API is available
+        if (!navigator.bluetooth) {
+          alert('⚠ Bluetooth is not supported on this device/browser. Please use Chrome on Android or a compatible browser.');
+          return;
+        }
+
+        // Connect to Bluetooth printer if not already connected
+        if (!bluetoothDevice || !bluetoothDevice.gatt.connected) {
+          alert('📱 Please select your Bluetooth thermal printer...');
+          
+          bluetoothDevice = await navigator.bluetooth.requestDevice({
+            filters: [
+              { services: ['000018f0-0000-1000-8000-00805f9b34fb'] }, // Common thermal printer service
+            ],
+            optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+          });
+
+          const server = await bluetoothDevice.gatt.connect();
+          const service = await server.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
+          bluetoothCharacteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+          
+          alert('✓ Printer connected!');
+        }
+
+        // Generate ESC/POS commands for thermal printer
+        const escPos = generateESCPOS(data, readingDate, dueDate, currentMonthCharge, currentMonthPenalty, unpaidBalance, unpaidPenalty, connectionFee, totalDue, totalAfterDueDate);
+        
+        // Send to printer
+        await bluetoothCharacteristic.writeValue(escPos);
+        
+        alert('✓ Receipt printed successfully!');
+        
+        // Update receipt count
+        const count = parseInt(localStorage.getItem('receiptsPrinted') || '0', 10);
+        localStorage.setItem('receiptsPrinted', count + 1);
+        
+      } catch (error) {
+        console.error('Bluetooth print error:', error);
+        if (error.name === 'NotFoundError') {
+          alert('⚠ No Bluetooth printer found. Make sure your printer is turned on and in pairing mode.');
+        } else {
+          alert('⚠ Failed to print: ' + error.message);
+        }
+      }
+    }
+
+    function generateESCPOS(data, readingDate, dueDate, currentMonthCharge, currentMonthPenalty, unpaidBalance, unpaidPenalty, connectionFee, totalDue, totalAfterDueDate) {
+      const encoder = new TextEncoder();
+      const ESC = 0x1B;
+      const GS = 0x1D;
+      
+      let commands = [];
+      
+      // Initialize printer
+      commands.push(ESC, 0x40); // Initialize
+      
+      // Center align
+      commands.push(ESC, 0x61, 0x01);
+      
+      // Bold on
+      commands.push(ESC, 0x45, 0x01);
+      commands = commands.concat(Array.from(encoder.encode('BAYARIN SA TUBIG\n')));
+      commands.push(ESC, 0x45, 0x00); // Bold off
+      
+      // Regular text
+      commands = commands.concat(Array.from(encoder.encode('Republika ng Pilipinas\n')));
+      commands = commands.concat(Array.from(encoder.encode('Lalawigan ng Camarines Norte\n')));
+      commands = commands.concat(Array.from(encoder.encode('Bayan ng San Lorenzo Ruiz\n')));
+      
+      // Bold on
+      commands.push(ESC, 0x45, 0x01);
+      commands = commands.concat(Array.from(encoder.encode('SAN LORENZO RUIZ\n')));
+      commands = commands.concat(Array.from(encoder.encode('WATERWORKS SYSTEM\n\n')));
+      commands.push(ESC, 0x45, 0x00); // Bold off
+      
+      // Left align
+      commands.push(ESC, 0x61, 0x00);
+      
+      // Account info
+      commands = commands.concat(Array.from(encoder.encode('--------------------------------\n')));
+      commands = commands.concat(Array.from(encoder.encode(`Account No: ${data.acct}\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Meter No: ${data.id}\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Reading Date: ${readingDate}\n`)));
+      commands = commands.concat(Array.from(encoder.encode('--------------------------------\n')));
+      
+      // Consumer info
+      commands = commands.concat(Array.from(encoder.encode(`Name: ${data.name}\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Address: ${data.address}\n`)));
+      commands = commands.concat(Array.from(encoder.encode('--------------------------------\n')));
+      
+      // Consumption
+      commands.push(ESC, 0x45, 0x01); // Bold on
+      commands = commands.concat(Array.from(encoder.encode('Konsumo:\n')));
+      commands.push(ESC, 0x45, 0x00); // Bold off
+      commands = commands.concat(Array.from(encoder.encode(`Ngayong Buwan:     ${data.current} m3\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Nakaraang Buwan:   ${data.prev} m3\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Kabuuang Konsumo:  ${data.consumption} m3\n\n`)));
+      
+      // Charges
+      commands.push(ESC, 0x45, 0x01); // Bold on
+      commands = commands.concat(Array.from(encoder.encode('Takdang Halaga:\n')));
+      commands.push(ESC, 0x45, 0x00); // Bold off
+      commands = commands.concat(Array.from(encoder.encode(`Bayarin ngayong Buwan: ${currentMonthCharge.toFixed(2)}\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Multa (10%):           ${currentMonthPenalty.toFixed(2)}\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Di pa Bayad:           ${unpaidBalance.toFixed(2)}\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Multa (10%):           ${unpaidPenalty.toFixed(2)}\n`)));
+      commands = commands.concat(Array.from(encoder.encode(`Bayarin sa Koneksyon:  ${connectionFee.toFixed(2)}\n`)));
+      commands = commands.concat(Array.from(encoder.encode('--------------------------------\n')));
+      commands.push(ESC, 0x45, 0x01); // Bold on
+      commands = commands.concat(Array.from(encoder.encode(`KABUUANG BAYARIN:      ${totalDue.toFixed(2)}\n`)));
+      commands.push(ESC, 0x45, 0x00); // Bold off
+      commands = commands.concat(Array.from(encoder.encode(`Pagkalipas ng petsa:   ${totalAfterDueDate.toFixed(2)}\n`)));
+      commands = commands.concat(Array.from(encoder.encode('--------------------------------\n\n')));
+      
+      // Due date
+      commands = commands.concat(Array.from(encoder.encode(`Due Date: ${dueDate}\n\n`)));
+      
+      // Footer
+      commands.push(ESC, 0x61, 0x01); // Center
+      commands = commands.concat(Array.from(encoder.encode('Hindi ito Patunay ng Kabayaran\n\n')));
+      
+      // Cut paper
+      commands.push(GS, 0x56, 0x00);
+      
+      return new Uint8Array(commands);
+    }
+
+    function filterConsumers() {
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      const zoneFilter = document.getElementById('zoneFilter').value;
+      const cards = document.querySelectorAll('.consumer-card');
+      
+      cards.forEach(card => {
+        const name = card.getAttribute('data-name').toLowerCase();
+        const account = card.getAttribute('data-account').toLowerCase();
+        const zone = card.getAttribute('data-zone');
+        
+        const matchesSearch = name.includes(searchInput) || account.includes(searchInput);
+        const matchesZone = !zoneFilter || zone === zoneFilter;
+        
+        if (matchesSearch && matchesZone) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Handle incoming data from consumer page
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const quickReading = localStorage.getItem('quickReading');
+      
+      if (quickReading) {
+        const data = JSON.parse(quickReading);
+        
+        // Check if we should show receipt only (for already read consumers)
+        if (urlParams.get('view') === 'receipt' && data.showReceiptOnly) {
+          // Auto-trigger receipt preview
+          setTimeout(() => {
+            printReadingReceipt(data.id, data.acct, data.name, data.address, data.prev, data.current, '', '');
+            localStorage.removeItem('quickReading');
+          }, 500);
+        } else if (!data.showReceiptOnly) {
+          // Pre-fill the form for pending consumers
+          // Find the consumer card and scroll to it
+          const cards = document.querySelectorAll('.consumer-card');
+          cards.forEach(card => {
+            if (card.getAttribute('data-account') === data.acct) {
+              // Scroll to card
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              
+              // Highlight the card
+              card.style.background = '#e3f2fd';
+              card.style.border = '2px solid #1a73e8';
+              
+              // Focus on current reading input
+              const currentInput = card.querySelector('input[type="number"]');
+              if (currentInput) {
+                setTimeout(() => {
+                  currentInput.focus();
+                }, 800);
+              }
+              
+              localStorage.removeItem('quickReading');
+            }
+          });
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meter Reader • Profile</title>
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="app-bar">
+    <div class="left"><a href="meter-dashboard.html">Back</a></div>
+    <div class="title">Profile</div>
+    <div class="right"></div>
+  </header>
+  <main class="page">
+    <!-- Profile Header -->
+    <div class="card" style="text-align:center; padding:24px;">
+      <div style="width:80px; height:80px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg, #1a73e8 0%, #1557b0 100%); color:#fff; margin:0 auto 16px; box-shadow:0 4px 12px rgba(26,115,232,0.3);">
+        <i class="fa-solid fa-user" style="font-size:32px"></i>
+      </div>
+      <div style="font-size:20px; font-weight:700; margin-bottom:4px;" id="profName">Juan Dela Cruz</div>
+      <div class="muted" style="font-size:14px;">Meter Reader</div>
+      <div style="display:inline-block; margin-top:8px; padding:6px 12px; background:#e3f2fd; color:#1565c0; border-radius:20px; font-size:12px; font-weight:600;">
+        <i class="fa-solid fa-map-marker-alt"></i> <span id="profZones">Zone 1</span>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stat-grid" style="margin-bottom:12px">
+      <div class="stat">
+        <div class="kpi" id="statToday" style="color:#4caf50;">0</div>
+        <div class="label">Today</div>
+      </div>
+      <div class="stat">
+        <div class="kpi" id="statPending" style="color:#ff9800;">0</div>
+        <div class="label">Pending</div>
+      </div>
+      <div class="stat">
+        <div class="kpi" id="statReceipts" style="color:#2196f3;">0</div>
+        <div class="label">Receipts</div>
+      </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="card">
+      <h3 style="margin-bottom:12px;"><i class="fa-solid fa-id-card"></i> Personal Information</h3>
+      <div class="field">
+        <div class="label">Full Name</div>
+        <input id="profNameInput" class="input" placeholder="Enter full name" value="Juan Dela Cruz">
+      </div>
+      <div class="grid-2" style="gap:10px">
+        <div class="field">
+          <div class="label">Email Address</div>
+          <input id="profEmail" class="input" type="email" placeholder="name@email.com">
+        </div>
+        <div class="field">
+          <div class="label">Phone Number</div>
+          <input id="profPhone" class="input" type="tel" placeholder="09xx xxx xxxx">
+        </div>
+      </div>
+      <div class="field">
+        <div class="label">Assigned Zone</div>
+        <input id="profZonesInput" class="input" value="Zone 1" readonly style="background:#f5f5f5;">
+        <div class="muted" style="font-size:11px; margin-top:4px;">Contact Billing Officer to change zone assignment</div>
+      </div>
+      <button class="btn primary full" id="saveProfile">
+        <i class="fa-solid fa-save"></i> Save Changes
+      </button>
+    </div>
+
+    <!-- Device & Sync Status -->
+    <div class="card">
+      <h3 style="margin-bottom:12px;"><i class="fa-solid fa-mobile-screen-button"></i> Device & Sync</h3>
+      <div class="list">
+        <div class="list-item">
+          <div class="icon" style="background:#d4edda;"><i class="fa-solid fa-wifi" style="color:#155724;"></i></div>
+          <div>
+            <div class="title">Connection Status</div>
+            <div class="meta" id="profOnline">Detecting...</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="icon" style="background:#d1ecf1;"><i class="fa-solid fa-clock" style="color:#0c5460;"></i></div>
+          <div>
+            <div class="title">Last Sync</div>
+            <div class="meta" id="lastSync">Never</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="icon" style="background:#e2e3e5;"><i class="fa-solid fa-mobile-screen" style="color:#383d41;"></i></div>
+          <div>
+            <div class="title">Device Info</div>
+            <div class="meta" id="profDevice" style="font-size:10px; word-break:break-word;">—</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn full" id="syncNow" style="margin-top:12px;">
+        <i class="fa-solid fa-rotate"></i> Sync Now
+      </button>
+    </div>
+
+    <!-- Security -->
+    <div class="card">
+      <h3 style="margin-bottom:12px;"><i class="fa-solid fa-lock"></i> Security</h3>
+      <div class="field">
+        <div class="label">Current Password</div>
+        <input type="password" id="currentPass" class="input" placeholder="Enter current password">
+      </div>
+      <div class="grid-2" style="gap:10px">
+        <div class="field">
+          <div class="label">New Password</div>
+          <input type="password" id="newPass" class="input" placeholder="New password">
+        </div>
+        <div class="field">
+          <div class="label">Confirm Password</div>
+          <input type="password" id="confirmPass" class="input" placeholder="Confirm password">
+        </div>
+      </div>
+      <button class="btn full" id="changePass">
+        <i class="fa-solid fa-key"></i> Change Password
+      </button>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+      <h3 style="margin-bottom:12px;"><i class="fa-solid fa-gear"></i> Actions</h3>
+      <button class="btn full" id="clearCache" style="margin-bottom:8px;">
+        <i class="fa-solid fa-trash"></i> Clear Local Data
+      </button>
+      <button class="btn full" style="background:#f44336; color:#fff;" onclick="if(confirm('Are you sure you want to logout?')) window.location.href='index.html'">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </main>
+  <nav class="bottom-nav">
+    <a href="meter-dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a>
+    <a href="meter-entry.html"><i class="fa-solid fa-pen-to-square"></i>Entry</a>
+    <a href="meter-consumers.html"><i class="fa-solid fa-users"></i>Consumers</a>
+    <a class="active" href="meter-profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+  </nav>
+  <script>
+    // Connection Status
+    function updateOnline() {
+      const online = navigator.onLine;
+      const el = document.getElementById('profOnline');
+      if (online) {
+        el.innerHTML = '<span style="color:#155724; font-weight:600;">● Online</span>';
+      } else {
+        el.innerHTML = '<span style="color:#721c24; font-weight:600;">● Offline</span>';
+      }
+    }
+    window.addEventListener('online', updateOnline);
+    window.addEventListener('offline', updateOnline);
+    updateOnline();
+
+    // Device Info
+    const profDevice = navigator.userAgent;
+    document.getElementById('profDevice').textContent = profDevice;
+
+    // Last Sync
+    const lastSyncTime = localStorage.getItem('lastSyncTime');
+    if (lastSyncTime) {
+      const date = new Date(lastSyncTime);
+      document.getElementById('lastSync').textContent = date.toLocaleString();
+    }
+
+    // Statistics
+    try {
+      const readings = JSON.parse(localStorage.getItem('readings') || '[]');
+      const today = new Date().toISOString().slice(0,10);
+      const todayCount = readings.filter(r => (r.timestamp || '').startsWith(today)).length;
+      const pending = readings.filter(r => r.synced === false).length;
+      const receipts = parseInt(localStorage.getItem('receiptsPrinted') || '0', 10);
+      document.getElementById('statToday').textContent = todayCount;
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statReceipts').textContent = receipts;
+    } catch (e) {}
+
+    // Load Profile
+    (function(){
+      try {
+        const data = JSON.parse(localStorage.getItem('meterProfile')||'null');
+        if (!data) return;
+        document.getElementById('profNameInput').value = data.name || 'Juan Dela Cruz';
+        document.getElementById('profName').textContent = data.name || 'Juan Dela Cruz';
+        document.getElementById('profEmail').value = data.email || '';
+        document.getElementById('profPhone').value = data.phone || '';
+        document.getElementById('profZonesInput').value = data.zones || 'Zone 1';
+        document.getElementById('profZones').textContent = data.zones || 'Zone 1';
+      } catch (e) {}
+    })();
+
+    // Save Profile
+    document.getElementById('saveProfile').addEventListener('click', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('profNameInput').value.trim();
+      const email = document.getElementById('profEmail').value.trim();
+      const phone = document.getElementById('profPhone').value.trim();
+      const zones = document.getElementById('profZonesInput').value.trim();
+
+      if (!name) {
+        alert('Please enter your full name');
+        return;
+      }
+
+      const data = { name, email, phone, zones };
+      localStorage.setItem('meterProfile', JSON.stringify(data));
+      document.getElementById('profName').textContent = name;
+      document.getElementById('profZones').textContent = zones;
+      
+      alert('✓ Profile saved successfully!');
+    });
+
+    // Sync Now
+    document.getElementById('syncNow').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!navigator.onLine) {
+        alert('⚠ You are offline. Please connect to the internet to sync.');
+        return;
+      }
+
+      const btn = e.target;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Syncing...';
+
+      // Simulate sync (replace with actual API call)
+      setTimeout(() => {
+        const now = new Date().toISOString();
+        localStorage.setItem('lastSyncTime', now);
+        document.getElementById('lastSync').textContent = new Date(now).toLocaleString();
+        
+        // Mark all readings as synced
+        try {
+          const readings = JSON.parse(localStorage.getItem('readings') || '[]');
+          readings.forEach(r => r.synced = true);
+          localStorage.setItem('readings', JSON.stringify(readings));
+          document.getElementById('statPending').textContent = '0';
+        } catch (e) {}
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Sync Now';
+        alert('✓ Data synced successfully!');
+      }, 2000);
+    });
+
+    // Change Password
+    document.getElementById('changePass').addEventListener('click', (e) => {
+      e.preventDefault();
+      const current = document.getElementById('currentPass').value;
+      const newPass = document.getElementById('newPass').value;
+      const confirm = document.getElementById('confirmPass').value;
+
+      if (!current || !newPass || !confirm) {
+        alert('⚠ Please fill in all password fields');
+        return;
+      }
+
+      if (newPass !== confirm) {
+        alert('⚠ New passwords do not match');
+        return;
+      }
+
+      if (newPass.length < 6) {
+        alert('⚠ Password must be at least 6 characters');
+        return;
+      }
+
+      // Simulate password change (replace with actual API call)
+      alert('✓ Password changed successfully!');
+      document.getElementById('currentPass').value = '';
+      document.getElementById('newPass').value = '';
+      document.getElementById('confirmPass').value = '';
+    });
+
+    // Clear Local Data
+    document.getElementById('clearCache').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!confirm('⚠ This will delete all local readings and data. Are you sure?')) {
+        return;
+      }
+
+      localStorage.removeItem('readings');
+      localStorage.removeItem('receiptsPrinted');
+      localStorage.removeItem('lastSyncTime');
+      
+      document.getElementById('statToday').textContent = '0';
+      document.getElementById('statPending').textContent = '0';
+      document.getElementById('statReceipts').textContent = '0';
+      document.getElementById('lastSync').textContent = 'Never';
+      
+      alert('✓ Local data cleared successfully!');
+    });
+  </script>
+</body>
+</html>
