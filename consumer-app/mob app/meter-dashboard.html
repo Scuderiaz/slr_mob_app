@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meter Reader • Dashboard</title>
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="app-bar">
+    <div class="left"><a href="index.html">Home</a></div>
+    <div class="title">Dashboard</div>
+    <div class="right"></div>
+  </header>
+  <main class="page">
+    <!-- Today's Progress -->
+    <section class="card" style="text-align:center; padding:24px; background:linear-gradient(135deg, #1a73e8 0%, #1557b0 100%); color:#fff; border-radius:16px;">
+      <div style="font-size:14px; margin-bottom:8px; opacity:0.9;">Today's Progress</div>
+      <div style="font-size:56px; font-weight:700; line-height:1; margin-bottom:8px;">36/45</div>
+      <div style="font-size:14px; opacity:0.9; margin-bottom:16px;">Meters Read</div>
+      <div class="progress" style="background:rgba(255,255,255,0.2); border:none;">
+        <div class="bar" style="width:80%; background:#4caf50;"></div>
+      </div>
+      <div style="margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.2); display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:center;">
+        <div>
+          <div style="font-size:24px; font-weight:700;">9</div>
+          <div style="font-size:12px; opacity:0.85;">Remaining</div>
+        </div>
+        <div>
+          <div style="font-size:24px; font-weight:700; color:#ffeb3b;">2</div>
+          <div style="font-size:12px; opacity:0.85;">Flagged</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assigned Zone -->
+    <section class="card">
+      <h3 style="margin-bottom:12px;">📍 Assigned Zone</h3>
+      <div style="background:#f8f9fa; padding:16px; border-radius:12px; border:1px solid #e5e7eb;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div>
+            <div style="font-size:20px; font-weight:700; color:#1a73e8;">Zone 1</div>
+            <div class="muted" style="font-size:13px;">45 households assigned</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:24px; font-weight:700; color:#4caf50;">80%</div>
+            <div class="muted" style="font-size:11px;">Complete</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:12px;">
+          <div style="text-align:center; padding:10px; background:#fff; border-radius:8px;">
+            <div style="font-size:18px; font-weight:700; color:#4caf50;">36</div>
+            <div class="muted" style="font-size:11px;">Read</div>
+          </div>
+          <div style="text-align:center; padding:10px; background:#fff; border-radius:8px;">
+            <div style="font-size:18px; font-weight:700; color:#ff9800;">9</div>
+            <div class="muted" style="font-size:11px;">Pending</div>
+          </div>
+          <div style="text-align:center; padding:10px; background:#fff; border-radius:8px;">
+            <div style="font-size:18px; font-weight:700; color:#f44336;">2</div>
+            <div class="muted" style="font-size:11px;">Issues</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="card">
+      <h3 style="margin-bottom:12px;">📋 Recent Activity</h3>
+      <div class="list">
+        <div class="list-item">
+          <div class="icon" style="background:#d4edda;"><i class="fa-solid fa-check" style="color:#155724;"></i></div>
+          <div>
+            <div class="title">Last reading completed</div>
+            <div class="meta">Juan Dela Cruz • 301 m³ • 2 mins ago</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="icon" style="background:#fff3cd;"><i class="fa-solid fa-triangle-exclamation" style="color:#856404;"></i></div>
+          <div>
+            <div class="title">Flagged: Unusual consumption</div>
+            <div class="meta">Maria Santos • 150 m³ spike • 15 mins ago</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="icon" style="background:#d1ecf1;"><i class="fa-solid fa-rotate" style="color:#0c5460;"></i></div>
+          <div>
+            <div class="title">Last sync</div>
+            <div class="meta">30 minutes ago • All data uploaded</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <nav class="bottom-nav">
+    <a class="active" href="meter-dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a>
+    <a href="meter-entry.html"><i class="fa-solid fa-pen-to-square"></i>Entry</a>
+    <a href="meter-consumers.html"><i class="fa-solid fa-users"></i>Consumers</a>
+    <a href="meter-profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+  </nav>
+</body>
+</html>

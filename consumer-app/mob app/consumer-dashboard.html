@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consumer • Dashboard</title>
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="app-bar">
+    <div class="left"><a href="index.html">Home</a></div>
+    <div class="title">Dashboard</div>
+    <div class="right">
+      <a href="consumer-notifications.html" style="position:relative;">
+        <i class="fa-regular fa-bell"></i>
+        <span id="notifBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#f44336; color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center;">1</span>
+      </a>
+    </div>
+  </header>
+  <main class="page">
+    <!-- New Receipt Notification -->
+    <div id="newReceiptBanner" style="display:none; background:#d4edda; border:1px solid #c3e6cb; border-radius:8px; padding:12px; margin-bottom:12px; display:flex; align-items:center; gap:10px;">
+      <i class="fa-solid fa-circle-check" style="color:#155724; font-size:20px;"></i>
+      <div style="flex:1;">
+        <div style="font-weight:700; color:#155724; font-size:14px;">New Reading Receipt Received!</div>
+        <div style="font-size:12px; color:#155724;">Your meter was read on <span id="receiptDate">Oct 13, 2025</span></div>
+      </div>
+      <button onclick="document.getElementById('newReceiptBanner').style.display='none'" style="background:none; border:none; color:#155724; font-size:20px; cursor:pointer;">&times;</button>
+    </div>
+
+    <!-- Welcome Section -->
+    <div style="background:linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); border-radius:16px; padding:20px; margin-bottom:20px; box-shadow:0 4px 20px rgba(26,115,232,0.25); position:relative; overflow:hidden;">
+      <div style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:rgba(255,255,255,0.1); border-radius:50%; filter:blur(30px);"></div>
+      <div style="position:relative; z-index:1;">
+        <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:4px;">Welcome back,</div>
+        <div style="font-size:24px; font-weight:700; color:#fff; margin-bottom:8px;">Juan Dela Cruz</div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <div style="font-size:11px; color:rgba(255,255,255,0.9); background:rgba(255,255,255,0.15); padding:6px 12px; border-radius:20px; backdrop-filter:blur(10px);">
+            <i class="fa-solid fa-id-card"></i> 07-11-46-2
+          </div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.9); background:rgba(255,255,255,0.15); padding:6px 12px; border-radius:20px; backdrop-filter:blur(10px);">
+            <i class="fa-solid fa-location-dot"></i> Zone 1, Purok 1
+          </div>
+        </div>
+        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(76,175,80,0.2); color:#a5d6a7; padding:6px 12px; border-radius:20px; font-size:11px; font-weight:600; border:1px solid rgba(76,175,80,0.3);">
+          <i class="fa-solid fa-circle-check"></i> Account Active
+        </div>
+      </div>
+    </div>
+
+    <!-- Amount Due Card -->
+    <section style="background:#fff; border-radius:16px; padding:24px; margin-bottom:16px; box-shadow:0 4px 20px rgba(0,0,0,0.08); border:1px solid #f0f0f0; position:relative; overflow:hidden;">
+      <div style="position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg, #1a73e8 0%, #0d47a1 100%);"></div>
+      <div style="padding-left:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <div style="width:32px; height:32px; background:linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#1a73e8;">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <div style="font-size:13px; color:#666; font-weight:600;">Total Amount Due</div>
+        </div>
+        <div style="font-size:48px; font-weight:700; color:#1a73e8; line-height:1; margin-bottom:20px;" id="totalDue">₱412.50</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; background:linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius:12px; border:1px solid #e0e0e0;">
+          <div>
+            <div style="font-size:11px; color:#999; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
+              <i class="fa-regular fa-calendar"></i> Due Date
+            </div>
+            <div style="font-size:14px; font-weight:700; color:#1a1a1a;" id="dueDate">October 30, 2025</div>
+          </div>
+          <div style="background:linear-gradient(135deg, #fff3cd 0%, #ffe082 100%); color:#f57c00; padding:10px 16px; border-radius:10px; font-size:11px; font-weight:700; box-shadow:0 2px 8px rgba(245,124,0,0.2);" id="daysRemaining">
+            <i class="fa-regular fa-clock"></i> 3 days left
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:20px;">
+      <div style="background:linear-gradient(135deg, #fff 0%, #f8f9fa 100%); border-radius:14px; padding:20px 12px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.08); border:1px solid #e3f2fd; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:-10px; right:-10px; width:40px; height:40px; background:rgba(26,115,232,0.1); border-radius:50%;"></div>
+        <div style="position:relative; z-index:1;">
+          <div style="width:40px; height:40px; background:linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; color:#1a73e8; font-size:18px;">
+            <i class="fa-solid fa-droplet"></i>
+          </div>
+          <div style="font-size:28px; font-weight:700; color:#1a73e8; margin-bottom:4px;" id="consumption">2</div>
+          <div style="font-size:11px; color:#666; font-weight:600;">m³ Used</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg, #fff 0%, #f8f9fa 100%); border-radius:14px; padding:20px 12px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.08); border:1px solid #fff3e0; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:-10px; right:-10px; width:40px; height:40px; background:rgba(255,152,0,0.1); border-radius:50%;"></div>
+        <div style="position:relative; z-index:1;">
+          <div style="width:40px; height:40px; background:linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; color:#ff9800; font-size:18px;">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+          <div style="font-size:28px; font-weight:700; color:#ff9800; margin-bottom:4px;" id="unpaidMonths">2</div>
+          <div style="font-size:11px; color:#666; font-weight:600;">Unpaid Bills</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg, #fff 0%, #f8f9fa 100%); border-radius:14px; padding:20px 12px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.08); border:1px solid #e8f5e9; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:-10px; right:-10px; width:40px; height:40px; background:rgba(76,175,80,0.1); border-radius:50%;"></div>
+        <div style="position:relative; z-index:1;">
+          <div style="width:40px; height:40px; background:linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; color:#4caf50; font-size:18px;">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div style="font-size:28px; font-weight:700; color:#4caf50; margin-bottom:4px;" id="accountStatus">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div style="font-size:11px; color:#666; font-weight:600;">Active</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latest Reading Receipt -->
+    <section class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="margin:0;"><i class="fa-solid fa-file-invoice"></i> Latest Receipt</h3>
+        <span class="chip unpaid">Unpaid</span>
+      </div>
+      
+      <div style="border:1px solid #e5e7eb; border-radius:10px; padding:16px; background:#fafafa;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700; font-size:16px;">Bayarin sa Tubig</div>
+            <div class="muted" style="font-size:12px;"><i class="fa-solid fa-calendar"></i> Received: Oct 13, 2025</div>
+          </div>
+        </div>
+        
+        <!-- Summary -->
+        <div style="background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:12px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid #e5e7eb;">
+            <span class="muted" style="font-size:13px;">Consumption:</span>
+            <span style="font-weight:700; font-size:14px; color:#1a73e8;">2 m³</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span class="muted" style="font-size:13px;">Current Month:</span>
+            <span style="font-weight:600; font-size:14px;">₱82.50</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span class="muted" style="font-size:13px;">Unpaid (2 months):</span>
+            <span style="font-weight:600; font-size:14px;">₱330.00</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:2px solid #1a73e8;">
+            <span style="font-weight:700; font-size:15px;">Total Due:</span>
+            <span style="font-weight:700; font-size:18px; color:#1a73e8;">₱412.50</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:12px;">
+          <button onclick="downloadReceipt()" class="btn" style="text-align:center; padding:10px; font-size:13px;">
+            <i class="fa-solid fa-download"></i> Download
+          </button>
+          <button onclick="printReceipt()" class="btn" style="text-align:center; padding:10px; font-size:13px;">
+            <i class="fa-solid fa-print"></i> Print
+          </button>
+          <button onclick="showReceiptModal()" class="btn primary" style="text-align:center; padding:10px; font-size:13px;">
+            <i class="fa-solid fa-eye"></i> View
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="active" href="consumer-dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a>
+    <a href="consumer-payment-history.html"><i class="fa-solid fa-receipt"></i>History</a>
+    <a href="consumer-profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+  </nav>
+
+  <script>
+    // Check for new synced receipts
+    function checkForNewReceipt() {
+      // In real app, this would check server/database for new receipts
+      // For demo, check localStorage for synced readings
+      const syncedReadings = JSON.parse(localStorage.getItem('syncedReadings') || '[]');
+      const myAccountNo = '07-11-46-2'; // Current user's account
+      
+      // Find reading for this consumer
+      const myReading = syncedReadings.find(r => r.acct === myAccountNo);
+      
+      if (myReading && myReading.isNew) {
+        // Show notification banner
+        document.getElementById('newReceiptBanner').style.display = 'flex';
+        document.getElementById('notifBadge').style.display = 'flex';
+        document.getElementById('receiptDate').textContent = myReading.date || 'Today';
+        
+        // Mark as seen after 3 seconds
+        setTimeout(() => {
+          myReading.isNew = false;
+          localStorage.setItem('syncedReadings', JSON.stringify(syncedReadings));
+        }, 3000);
+      }
+    }
+
+    // Print receipt function (same format as modal view)
+    function printReceipt() {
+      const receiptHTML = `
+        <html>
+        <head>
+          <title>Reading Receipt - Bayarin sa Tubig</title>
+          <style>
+            body { font-family: system-ui; padding: 20px; max-width: 400px; margin: 0 auto; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10px; border: 1px solid #000; }
+            td, th { border: 1px solid #000; padding: 4px; }
+            .center { text-align: center; }
+            .bold { font-weight: 700; }
+          </style>
+        </head>
+        <body>
+          <div class="center" style="margin-bottom:10px;">
+            <div class="bold" style="font-size:13px; margin-bottom:8px; letter-spacing:0.5px;">BAYARIN SA TUBIG</div>
+            <div style="font-size:9px; line-height:1.2;">
+              Republika ng Pilipinas<br>
+              Lalawigan ng Camarines Norte<br>
+              Bayan ng San Lorenzo Ruiz
+            </div>
+            <div class="bold" style="font-size:10px; margin-top:6px; letter-spacing:0.3px;">SAN LORENZO RUIZ WATERWORKS SYSTEM</div>
+          </div>
+          
+          <table>
+            <tr>
+              <th>Account No.</th>
+              <th>Numero ng Metro</th>
+              <th>Petsa ng Pagbasa</th>
+            </tr>
+            <tr>
+              <td>07-11-46-2</td>
+              <td>1234</td>
+              <td>11/18/2025</td>
+            </tr>
+          </table>
+          
+          <table>
+            <tr><th colspan="3">Pangalan ng Consumer</th></tr>
+            <tr><td colspan="3">Juan Dela Cruz</td></tr>
+            <tr><th colspan="3">Address</th></tr>
+            <tr><td colspan="3">Purok 1, Barangay Poblacion</td></tr>
+          </table>
+          
+          <div style="font-size:9px; margin-bottom:8px; line-height:1.4; text-align:justify;">
+            Ang tagapagbasa ng metro ng tubig ay pumunta sa inyo ngayong araw upang basahin at kwentahin ang konsumo ng tubig ayon sa mga sumusunod:
+          </div>
+          
+          <div style="font-size:10px; margin-bottom:6px;">
+            <div class="bold" style="margin-bottom:2px;">Konsumo:</div>
+            <div style="padding-left:5px; line-height:1.5;">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Ngayong Buwan _____________________</span>
+                <span><strong>1242</strong> metro kubiko</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Nakaraang Buwan ___________________</span>
+                <span><strong>1234</strong> metro kubiko</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang Konsumo ___________________</span>
+                <span><strong>8</strong> metro kubiko</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="font-size:10px; margin-bottom:6px; margin-top:8px;">
+            <div class="bold" style="margin-bottom:2px;">Takdang Halaga</div>
+            <div style="padding-left:5px; line-height:1.5;">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Bayarin ngayong Buwan ___________________</span>
+                <span><strong>200.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Multa (10%) _____________________________</span>
+                <span><strong>20.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Di pa Bayad na Bayarin __________________</span>
+                <span><strong>300.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Multa (10%) _____________________________</span>
+                <span><strong>30.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Bayarin sa Koneksyon/Metro ______________</span>
+                <span><strong>0.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang Bayarin ________________________</span>
+                <span><strong>550.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang bayarin pagkalipas ng takdang petsa __</span>
+                <span><strong>570.00</strong></span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="font-size:8px; margin:10px 0; line-height:1.4; text-align:justify; font-style:italic;">
+            "Kung ang bayarin sa metro ng tubig/bayarin sa koneksyon/mga nakaraang buwan at multa ay nabayaran na, kasalukuyang buwan lang ang babayaran. <strong>2025 SEPT</strong>"
+          </div>
+          
+          <table style="font-size:9px;">
+            <tr>
+              <th style="text-align:center;">Water Bill #</th>
+              <th style="text-align:center;">Tagabasa ng Metro</th>
+              <th style="text-align:center;">Para sa Buwang</th>
+            </tr>
+            <tr>
+              <td style="padding:20px;"></td>
+              <td style="padding:20px; text-align:center;">__________</td>
+              <td style="padding:20px;"></td>
+            </tr>
+          </table>
+          
+          <div class="center" style="font-size:8px; margin-top:8px; font-style:italic;">
+            *** Hindi ito Patunay ng Kabayaran ***
+          </div>
+        </body>
+        </html>
+      `;
+      
+      const printWindow = window.open('', '', 'height=600,width=400');
+      printWindow.document.write(receiptHTML);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    }
+
+    // Download receipt as PDF (simplified - in real app would use PDF library)
+    function downloadReceipt() {
+      alert('📄 Receipt download feature\n\nIn production, this would generate a PDF file of your receipt.\n\nFor now, please use the Print button to save as PDF using your browser\'s print dialog.');
+    }
+
+    // Show receipt in modal
+    function showReceiptModal() {
+      const receiptHTML = `
+        <div style="font-family:system-ui; max-width:400px; margin:0 auto; padding:20px; background:#fff;">
+          <div style="text-align:center; margin-bottom:10px;">
+            <div style="font-weight:700; font-size:13px; margin-bottom:8px; letter-spacing:0.5px;">BAYARIN SA TUBIG</div>
+            <div style="font-size:9px; line-height:1.2;">
+              Republika ng Pilipinas<br>
+              Lalawigan ng Camarines Norte<br>
+              Bayan ng San Lorenzo Ruiz
+            </div>
+            <div style="font-weight:700; font-size:10px; margin-top:6px; letter-spacing:0.3px;">SAN LORENZO RUIZ WATERWORKS SYSTEM</div>
+          </div>
+          
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+            <tr>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;">Account No.</td>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;">Numero ng Metro</td>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;">Petsa ng Pagbasa</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000;">07-11-46-2</td>
+              <td style="padding:4px; border:1px solid #000;">1234</td>
+              <td style="padding:4px; border:1px solid #000;">11/18/2025</td>
+            </tr>
+          </table>
+          
+          <table style="width:100%; border-collapse:collapse; margin-bottom:10px; font-size:10px; border:1px solid #000;">
+            <tr>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;" colspan="3">Pangalan ng Consumer</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000;" colspan="3">Juan Dela Cruz</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000; font-weight:600;" colspan="3">Address</td>
+            </tr>
+            <tr>
+              <td style="padding:4px; border:1px solid #000;" colspan="3">Purok 1, Barangay Poblacion</td>
+            </tr>
+          </table>
+          
+          <div style="font-size:9px; margin-bottom:8px; line-height:1.4; text-align:justify;">
+            Ang tagapagbasa ng metro ng tubig ay pumunta sa inyo ngayong araw upang basahin at kwentahin ang konsumo ng tubig ayon sa mga sumusunod:
+          </div>
+          
+          <div style="font-size:10px; margin-bottom:6px;">
+            <div style="font-weight:700; margin-bottom:2px;">Konsumo:</div>
+            <div style="padding-left:5px; line-height:1.5;">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Ngayong Buwan _____________________</span>
+                <span><strong>1242</strong> metro kubiko</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Nakaraang Buwan ___________________</span>
+                <span><strong>1234</strong> metro kubiko</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang Konsumo ___________________</span>
+                <span><strong>8</strong> metro kubiko</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="font-size:10px; margin-bottom:6px; margin-top:8px;">
+            <div style="font-weight:700; margin-bottom:2px;">Takdang Halaga</div>
+            <div style="padding-left:5px; line-height:1.5;">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Bayarin ngayong Buwan ___________________</span>
+                <span><strong>200.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Multa (10%) _____________________________</span>
+                <span><strong>20.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Di pa Bayad na Bayarin __________________</span>
+                <span><strong>300.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Multa (10%) _____________________________</span>
+                <span><strong>30.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Bayarin sa Koneksyon/Metro ______________</span>
+                <span><strong>0.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang Bayarin ________________________</span>
+                <span><strong>550.00</strong></span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Kabuuang bayarin pagkalipas ng takdang petsa __</span>
+                <span><strong>570.00</strong></span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="font-size:8px; margin:10px 0; line-height:1.4; text-align:justify; font-style:italic;">
+            "Kung ang bayarin sa metro ng tubig/bayarin sa koneksyon/mga nakaraang buwan at multa ay nabayaran na, kasalukuyang buwan lang ang babayaran. <strong>2025 SEPT</strong>"
+          </div>
+          
+          <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:9px; border:1px solid #000;">
+            <tr>
+              <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Water Bill #</td>
+              <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Tagabasa ng Metro</td>
+              <td style="padding:6px; border:1px solid #000; font-weight:700; text-align:center;">Para sa Buwang</td>
+            </tr>
+            <tr>
+              <td style="padding:20px; border:1px solid #000;"></td>
+              <td style="padding:20px; border:1px solid #000; text-align:center;">__________</td>
+              <td style="padding:20px; border:1px solid #000;"></td>
+            </tr>
+          </table>
+          
+          <div style="font-size:8px; text-align:center; margin-top:8px; font-style:italic;">
+            *** Hindi ito Patunay ng Kabayaran ***
+          </div>
+        </div>
+      `;
+      
+      // Create modal
+      const modal = document.createElement('div');
+      modal.id = 'receiptModal';
+      modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px; overflow-y:auto;';
+      
+      modal.innerHTML = `
+        <div style="background:#fff; border-radius:12px; max-width:500px; width:100%; max-height:90vh; overflow-y:auto; position:relative;">
+          <div style="position:sticky; top:0; background:#fff; padding:16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; border-radius:12px 12px 0 0; z-index:10;">
+            <h3 style="margin:0; font-size:18px;">Receipt Preview</h3>
+            <button onclick="document.getElementById('receiptModal').remove()" style="background:none; border:none; font-size:28px; cursor:pointer; padding:0; width:32px; height:32px; line-height:1;">&times;</button>
+          </div>
+          <div style="padding:0;">
+            ${receiptHTML}
+          </div>
+          <div style="position:sticky; bottom:0; background:#fff; padding:16px; border-top:1px solid #e5e7eb; border-radius:0 0 12px 12px; z-index:10;">
+            <button onclick="window.print()" style="width:100%; padding:14px; background:#1a73e8; color:#fff; border:none; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+              <i class="fa-solid fa-print"></i> Print Receipt
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+
+    // Auto-refresh check every 30 seconds for new receipts
+    setInterval(checkForNewReceipt, 30000);
+    
+    // Check on page load
+    checkForNewReceipt();
+  </script>
+</body>
+</html>

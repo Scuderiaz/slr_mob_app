@@ -1,50 +1,69 @@
-# Welcome to your Expo app 👋
+# San Lorenzo Ruiz Municipal Water Billing System 💧
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile application for meter readers to collect water consumption data for San Lorenzo Ruiz Municipal Government.
 
-## Get started
+## 🏗️ System Architecture
 
-1. Install dependencies
+This system focuses on **field data collection** with:
 
-   ```bash
-   npm install
-   ```
+### 📱 **Meter Reader Mobile App**
+- React Native app for field meter reading and data collection
+- Offline-first architecture with sync capabilities
+- Receipt generation and printing
+- Photo documentation support
+- Zone-based consumer management
 
-2. Start the app
+## 🚀 Quick Start
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+### Meter Reader Mobile App
 ```bash
-npm run reset-project
+cd meter-reader-app
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 📁 Project Structure
 
-## Learn more
+```
+slr_mobile_apps/
+├── meter-reader-app/          # Mobile app for meter readers
+│   ├── .vscode/              # VS Code settings
+│   ├── shared/               # App-specific shared services
+│   ├── app/                  # React Native app code
+│   ├── utils/                # Utility functions
+│   ├── types/                # TypeScript definitions
+│   └── package.json          # App dependencies
+├── docs/                     # All project documentation
+│   ├── METER_READER_*.md     # Meter reader specific docs
+│   └── *.md                  # General project docs
+├── mob app/                  # Legacy PWA (reference)
+└── water_billing_system.sql  # Database schema
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🗄️ Database
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **MySQL** production database
+- **SQLite** local storage for mobile app
+- **Offline-first** data collection
+- **Sync capabilities** between mobile and server
 
-## Join the community
+## 🔧 Technology Stack
 
-Join our community of developers creating universal apps.
+- **Mobile**: React Native + Expo SDK 54
+- **Database**: MySQL + SQLite
+- **Language**: TypeScript
+- **Storage**: AsyncStorage + SQLite
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 👥 User Role
+
+**Meter Reader** - Field data collection, meter reading, receipt generation, photo documentation
+
+## 📄 License
+
+Proprietary - San Lorenzo Ruiz Municipal Government
+
+---
+
+**Version**: 2.0.0  
+**Last Updated**: November 2025  
+**Platform**: React Native Mobile App

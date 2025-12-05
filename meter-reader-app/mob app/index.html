@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SLR Water Mobile • Login</title>
+  <link rel="stylesheet" href="mobile.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#1967d2" />
+</head>
+<body class="login-screen">
+  <div class="login-hero">
+    <img class="brand-logo" src="SLR logo 1.svg" alt="Logo" />
+  </div>
+
+  <div class="login-card">
+    <div class="login-title">San Lorenzo Ruiz Municipal</div>
+    <div class="login-sub">Water Billing and Payment Record<br/>Management System</div>
+
+    <form id="loginForm" style="margin-top:16px;">
+      <div class="field">
+        <div class="label label-strong"><i class="fa-solid fa-user" style="margin-right:6px;"></i>Username</div>
+        <div class="input-icon">
+          <i class="fa-solid fa-user"></i>
+          <input class="input" type="text" id="username" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label label-strong"><i class="fa-solid fa-lock" style="margin-right:6px;"></i>Password</div>
+        <div class="input-icon">
+          <i class="fa-solid fa-lock"></i>
+          <input class="input" type="password" id="password" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <select class="select" id="role" required>
+          <option value="" selected>Select As</option>
+          <option value="consumer">Consumer</option>
+          <option value="meter">Meter Reader</option>
+        </select>
+      </div>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var role = document.getElementById('role').value;
+      if (!role) return;
+      if (role === 'consumer') {
+        window.location.href = 'consumer-dashboard.html';
+      } else if (role === 'meter') {
+        window.location.href = 'meter-dashboard.html';
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
